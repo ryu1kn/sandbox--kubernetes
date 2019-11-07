@@ -1,0 +1,13 @@
+resources:
+  - namespace.yaml
+
+secretGenerator:
+  - name: foo
+    files:
+    - ./secret-1.txt
+  - name: bar
+    files:
+    - ./secret-2.txt
+
+generatorOptions:
+  disableNameSuffixHash: true
