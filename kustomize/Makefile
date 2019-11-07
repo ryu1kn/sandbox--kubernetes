@@ -6,6 +6,13 @@ kustomize_work ?= $(build_dir)/$(kustomize_dir)
 output_path ?= $(build_dir)/result.yaml
 namespace ?= app
 
+define NAMESPACE_DEF
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: $(namespace)
+endef
+
 .PHONEY: all
 all: $(output_path)
 
@@ -13,8 +20,9 @@ $(output_path): $(kustomize_work)/namespace.yaml
 	(cd $(kustomize_work) && kustomize edit set namespace $(namespace)) \
 	&& kustomize build $(kustomize_work) -o $@
 
+export NAMESPACE_DEF
 $(kustomize_work)/namespace.yaml: $(kustomize_work)
-	echo 'apiVersion: v1\nkind: Namespace\nmetadata:\n  name: $(namespace)' > $@
+	echo "$$NAMESPACE_DEF" > $@
 
 $(kustomize_work): $(build_dir)
 	cp -r $(kustomize_dir) $@
